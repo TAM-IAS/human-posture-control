@@ -1,0 +1,57 @@
+<mujoco model="human_stance_rs_model">
+  <compiler angle="radian" coordinate="local" inertiafromgeom="false" balanceinertia="false"/>
+  <default>
+    <joint armature="0.0" damping="0.0" limited="false"/>
+    <geom rgba="1 0 0 1"/>
+    <motor ctrllimited="false" ctrlrange="-1.0 1.0"/>
+  </default>
+  <option integrator="Euler" timestep="0.002"/>
+  <visual>
+    <global azimuth="180"/>
+  </visual>
+  <worldbody>
+    <light cutoff="100" diffuse="1 1 1" dir="-0 0 -1.3" directional="true" exponent="1" pos="0 0 2" specular=".1 .1 .1"/>
+    <geom name="floor" pos="0 0 0" rgba="0.8 0.9 0.8 1" size="20 20 .125" type="plane" material="MatPlane"/>
+
+    <body name="shank" pos="0 0 0.0702">
+      <joint name="ankle_joint" axis="1 0 0" pos="0 0 0" range="-0.5236 0.5236" type="hinge"/>
+      <geom friction="0 0 0" fromto="0 0 0 0 0 0.4428" name="leg_geom" size="0.04" type="capsule"/>
+      <inertial pos="0 0 0.251067600000000" mass="7.44" diaginertia="0.133046068549478 1 1"/>
+
+        <body name="thigh" pos="0 0 0.4428">
+          <joint name="knee_joint" axis="1 0 0" pos="0 0 0" range="0 2.618" type="hinge"/>
+          <geom friction="0 0 0" fromto="0 0 0 0 0 0.441000000000000" name="thigh_geom" size="0.05" type="capsule"/>
+          <inertial pos="0 0 0.250047000000000" mass="16.0" diaginertia="0.324640131984 1 1"/>
+
+
+            <body name="torso" pos="0 0 0.441000000000000">
+              <joint name="hip_joint" axis="1 0 0" pos="0 0 0" range="-1.047 1.047" type="hinge"/>
+              <geom friction="0 0 0" fromto="0 0 0 0 0 0.730800000000000" name="trunk_geom" size="0.08" type="capsule"/>
+              <inertial pos="0 0 0.324518400000000" mass="54.24" diaginertia="3.586022577694309 3 3"/>
+
+              <site name="head" pos="0 0 0.730800000000000"/>
+
+                <body name="head" pos="0 0 0.730800000000000">
+                  <geom friction="0.0" name="head_geom" size="0.08" type="sphere"/>
+                  <inertial pos="0 0 0" mass="0.0" diaginertia="0 0 0"/>
+                </body>
+            </body>
+        </body>
+    </body>
+
+
+  </worldbody>
+  <actuator>
+    <motor name="act/ankle_joint" ctrllimited="false" ctrlrange="-1.0 1.0" gear="1.0" joint="ankle_joint"/>
+    <motor name="act/knee_joint" ctrllimited="false" ctrlrange="-1.0 1.0" gear="1.0" joint="knee_joint"/>
+    <motor name="act/hip_joint" ctrllimited="false" ctrlrange="-1.0 1.0" gear="1.0" joint="hip_joint"/>
+  </actuator>
+    <asset>
+        <texture type="skybox" builtin="gradient" rgb1=".4 .5 .6" rgb2="0 0 0"
+            width="100" height="100"/>
+        <texture builtin="flat" height="1278" mark="cross" markrgb="1 1 1" name="texgeom" random="0.01" rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" type="cube" width="127"/>
+        <texture builtin="checker" height="100" name="texplane" rgb1="0 0 0" rgb2="0.8 0.8 0.8" type="2d" width="100"/>
+        <material name="MatPlane" reflectance="0.5" shininess="1" specular="1" texrepeat="60 60" texture="texplane"/>
+        <material name="geom" texture="texgeom" texuniform="true"/>
+    </asset>
+</mujoco>
