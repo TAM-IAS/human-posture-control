@@ -14,6 +14,7 @@
     <geom name="floor" pos="0 0 0" rgba="0.8 0.9 0.8 1" size="20 20 .125" type="plane" material="MatPlane"/>
 
     <body name="shank" pos="0 0 0.0702">
+      <site name="ankle_joint" pos="0 0 0"/>
       <joint name="ankle_joint" axis="1 0 0" pos="0 0 0" range="-0.5236 0.5236" type="hinge"/>
       <geom friction="0 0 0" fromto="0 0 0 0 0 0.4428" name="leg_geom" size="0.04" type="capsule"/>
       <inertial pos="0 0 0.251067600000000" mass="7.44" diaginertia="0.133046068549478 1 1"/>
@@ -46,6 +47,10 @@
     <motor name="act/knee_joint" ctrllimited="false" ctrlrange="-1.0 1.0" gear="1.0" joint="knee_joint"/>
     <motor name="act/hip_joint" ctrllimited="false" ctrlrange="-1.0 1.0" gear="1.0" joint="hip_joint"/>
   </actuator>
+  <sensor>
+    <force name="ankle_joint_force" site="ankle_joint"/>
+    <torque name="ankle_joint_torque" site="ankle_joint"/>
+  </sensor>
     <asset>
         <texture type="skybox" builtin="gradient" rgb1=".4 .5 .6" rgb2="0 0 0"
             width="100" height="100"/>

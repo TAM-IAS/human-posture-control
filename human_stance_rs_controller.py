@@ -11,7 +11,8 @@ from scipy.optimize import minimize
 from functools import partial
 import xml.etree.ElementTree as ET
 import matplotlib.pyplot as plt
-
+import os
+os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = '/home/alap/miniconda3/envs/balance_irl/bin/platforms' #Change this to your environment
 
 def get_dim_obs_type(obs_type):
     if obs_type == ObservationType.BODY_POS:
@@ -314,7 +315,7 @@ class HumanStance(MuJoCo):
 
         """Plotter Fields"""
         self.data = {"Joint Angles": [], "Joint Velocities": [], "Head Position": [], "Head Velocity": [], "Head Acceleration": [],
-                     "Torso RotEuler": [], "Head Forcelet Position": [], "Head Forcelet Orientation": [], "Lambda Dot": [], "Lambda": [], "E": [], "T": [], "T_act":[], "T_ela":[], "T_vis":[], "T_gravity": [], "True Joint Angles": [], "True Joint Velocities": [], "Joint Accelerations": []}
+                     "Torso RotEuler": [], "Head Forcelet Position": [], "Head Forcelet Orientation": [], "Lambda Dot": [], "Lambda": [], "E": [], "T": [], "T_act":[], "T_ela":[], "T_vis":[], "T_gravity": [], "True Joint Angles": [], "True Joint Velocities": [], "Joint Accelerations": [], "Ground_Reaction":[], "Center of Pressure":[]}
 
     def setup(self, obs=None):
         self._data.qpos = deepcopy(self.init_robot_pos)
@@ -768,7 +769,7 @@ class HumanStance(MuJoCo):
         self.data["Joint Velocities"] = joint_velocities
         self.data["True Joint Velocities"] = self._data.qvel.reshape(-1,1)
         self.data["Joint Accelerations"] = self._data.qacc.reshape(-1,1)
-        self.data["Head Position"] = self._data.site_xpos.reshape(-1,1)
+        self.data["Head Position"] = self._data.site_xpos.reshape(-1,1)[-3:]
         self.data["Head Velocity"] = head_vel
         self.data["Head Acceleration"] = head_acc
         self.data["Torso RotEuler"] = rot_euler.reshape(-1,1)
@@ -782,7 +783,15 @@ class HumanStance(MuJoCo):
         self.data["T_ela"] = T_passive
         self.data["T_vis"] = T_viscous
         self.data["T_gravity"] = self._data.qfrc_bias.reshape(-1, 1)
-        
+        torque_x = self._data.sensordata.reshape(-1,1)[3]
+        reaction_y = self._data.sensordata.reshape(-1,1)[1]
+        reaction_z = self._data.sensordata.reshape(-1,1)[2]
+        cop = np.zeros(3)
+        cop[1] = (torque_x + reaction_y*0.0702)/max(reaction_z, 0.01)
+
+        self.data["Ground_Reaction"] = [torque_x, reaction_y, reaction_z]
+        self.data["Center of Pressure"] = cop.reshape(-1,1)
+
         return torques
 
     def get_activations(self, joint_angles, joint_velocities, lamda, lambda_dot, rho, mu):
@@ -946,11 +955,13 @@ if __name__ == '__main__':
         "16": "T_act",
         "17": "T_ela",
         "18": "T_vis",
-        "19": "T_gravity"
+        "19": "T_gravity",
+        "20": "Ground_Reaction",
+        "21": "Center of Pressure"
     }
 
     # Choose the categories that you want to plot. If too many, the plots might be too small.
-    choose = [str(1),str(3), str(6), str(6), str(10), str(11), str(15)]
+    choose = [str(1),str(3), str(15), str(20), str(21)]
     data = {}
     data_all = []
 
@@ -998,7 +1009,7 @@ if __name__ == '__main__':
         env.current_step += 1
 
         state = next_state
-if PLOT_RESULTS == 2:
-    plotter = Plotter(env.current_step, data_all)
-    plotter(env.current_step, data_all)
-plt.show()
+    if PLOT_RESULTS == 2:
+        plotter = Plotter(env.current_step, data_all)
+        plotter(env.current_step, data_all)
+    plt.show()
