@@ -16,18 +16,18 @@
     <body name="shank" pos="0 0 0.0702">
       <site name="ankle_joint" pos="0 0 0"/>
       <joint name="ankle_joint" axis="1 0 0" pos="0 0 0" range="-0.5236 0.5236" type="hinge"/>
-      <geom friction="0 0 0" fromto="0 0 0 0 0 0.4428" name="leg_geom" size="0.04" type="capsule"/>
+      <geom friction="0.0" fromto="0 0 0 0 0 0.4428" name="leg_geom" size="0.04" type="capsule"/>
       <inertial pos="0 0 0.251067600000000" mass="7.44" diaginertia="0.133046068549478 1 1"/>
 
         <body name="thigh" pos="0 0 0.4428">
           <joint name="knee_joint" axis="1 0 0" pos="0 0 0" range="0 2.618" type="hinge"/>
-          <geom friction="0 0 0" fromto="0 0 0 0 0 0.441000000000000" name="thigh_geom" size="0.05" type="capsule"/>
+          <geom friction="0.0" fromto="0 0 0 0 0 0.441000000000000" name="thigh_geom" size="0.05" type="capsule"/>
           <inertial pos="0 0 0.250047000000000" mass="16.0" diaginertia="0.324640131984 1 1"/>
 
 
             <body name="torso" pos="0 0 0.441000000000000">
               <joint name="hip_joint" axis="1 0 0" pos="0 0 0" range="-1.047 1.047" type="hinge"/>
-              <geom friction="0 0 0" fromto="0 0 0 0 0 0.730800000000000" name="trunk_geom" size="0.08" type="capsule"/>
+              <geom friction="0.0" fromto="0 0 0 0 0 0.730800000000000" name="trunk_geom" size="0.08" type="capsule"/>
               <inertial pos="0 0 0.324518400000000" mass="54.24" diaginertia="3.586022577694309 3 3"/>
 
               <site name="head" pos="0 0 0.730800000000000"/>
